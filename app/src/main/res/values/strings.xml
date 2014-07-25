@@ -9,6 +9,11 @@
     <string name="empty_string">Empty string!</string>
     <string name="saveImage">Save image</string>
     <string name="image_saved">Image saved!</string>
+    <string name="image_not_saved">Image not saved!</string>
+    <string name="alert_save_title">Save image</string>
+    <string name="alert_save_label">Select file name</string>
+    <string name="alert_save_positive">OK</string>
+    <string name="alert_save_negative">Cancel</string>
     
     <string-array name="eccArray">
         <item>L</item>

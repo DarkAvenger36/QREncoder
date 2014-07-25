@@ -1,10 +1,13 @@
 package com.example.lorenzo.qrencoder;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.Editable;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -41,16 +44,17 @@ import main.java.com.google.zxing.qrcode.QRCodeWriter;
 public class CodeFragment extends Fragment {
 
     private final String LOG_TAG = CodeFragment.class.getSimpleName();
+    private final String FORMAT = ".png";
 
-    View rootView;
-    ImageView imgView;
-    EditText textArea;
-    TextView encodedTxt;
-    Spinner eccSpinner;
-    Spinner modeSpinner;
-    int min=0;
-    String ecc = "L";
-    private int width,height;
+    private View rootView;
+    private ImageView imgView;
+    private EditText textArea;
+    private TextView encodedTxt;
+    private Spinner eccSpinner;
+    private Spinner modeSpinner;
+    private int min=0;
+    private String ecc = "L";
+    private int width, height;
     private Bitmap bmp;
 
     public CodeFragment() {
@@ -75,7 +79,8 @@ public class CodeFragment extends Fragment {
             Log.d(LOG_TAG,"Clear!");
             return true;
         }else if (id == R.id.saveFile){
-            saveImage();
+            //saveImage();
+            showDialog();
             Log.d(LOG_TAG,"Save!");
             return true;
         }
@@ -212,7 +217,7 @@ public class CodeFragment extends Fragment {
 
         String message = textArea.getText().toString();
         if (!message.isEmpty()){
-            Log.d(LOG_TAG, "message = " + message);
+            Log.d(LOG_TAG, "User input = " + message);
             String ecc = eccSpinner.getSelectedItem().toString();
             String mode = modeSpinner.getSelectedItem().toString();
 
@@ -235,20 +240,30 @@ public class CodeFragment extends Fragment {
         encodedTxt.setText("");
     }
 
-    private void saveImage(){
-        if (bmp != null) {
-            String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                    "/QRCODE";
-            File dir = new File(file_path);
-            if (!dir.exists())
-                dir.mkdirs();
-            File file = new File(dir, "QR.png");
+    private void saveImage(String fileName){
+        String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                "/QRCODE";
+        File dir = new File(file_path);
+        if (!dir.exists())
+            dir.mkdirs();
+
+
+        if (fileName.isEmpty()) {
+            //do not save
+            Log.w(LOG_TAG,"empty file name");
+            Toast.makeText(getActivity(), R.string.image_not_saved, Toast.LENGTH_SHORT).show();
+
+        } else {
+
+            String selectedName = fileName + this.FORMAT;
+            //Log.d(LOG_TAG,"selecte name = "+ selectedName);
+            File file = new File(dir, selectedName);
             FileOutputStream fOut = null;
             try {
                 fOut = new FileOutputStream(file);
                 //Log.d(LOG_TAG,file_path);
                 bmp.compress(Bitmap.CompressFormat.PNG, 85, fOut);
-                Toast.makeText(getActivity(),R.string.image_saved,Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), R.string.image_saved, Toast.LENGTH_SHORT).show();
             } catch (FileNotFoundException fnf) {
                 fnf.printStackTrace();
             } finally {
@@ -259,13 +274,35 @@ public class CodeFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-        }else{
-            Toast.makeText(getActivity(),R.string.empty_string,Toast.LENGTH_SHORT).show();
         }
-
-
-
     }
+
+    private void showDialog(){
+        if (bmp != null) {
+
+            final EditText input = new EditText(getActivity());
+
+            new AlertDialog.Builder(getActivity())
+                    .setTitle(R.string.alert_save_title)
+                    .setMessage(R.string.alert_save_label)
+                    .setView(input)
+                    .setPositiveButton(R.string.alert_save_positive, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            String fileName = input.getText().toString();
+                            saveImage(fileName);
+                        }
+                    })
+                    .setNegativeButton(R.string.alert_save_negative, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+
+                        }
+                    }).show();
+
+        }else{
+            Toast.makeText(getActivity(), R.string.empty_string, Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
 
 }
