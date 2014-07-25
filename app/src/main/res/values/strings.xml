@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">QREncoder</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="generate">Generate!</string>
+    <string name="clear" >Clear</string>
+    <string name="empty_string">Empty string!</string>
+    <string name="saveImage">Save image</string>
+    <string name="image_saved">Image saved!</string>
+    
+    <string-array name="eccArray">
+        <item>L</item>
+        <item>M</item>
+        <item>Q</item>
+        <item>H</item>
+    </string-array>
+
+    <string-array name="modeArray">
+        <item>HCC-QR</item>
+        <item>QR_Code</item>
+        <item>Data_Matrix</item>
+        <item>AztecCode</item>
+        <item>Codabar</item>
+        <item>Code_39</item>
+        <item>Code_128</item>
+        <item>EAN_8</item>
+        <item>EAN_13</item>
+        <item>UPC_A</item>
+        <item>ITF</item>
+        <item>PDF_417</item>
+
+
+
+
+
+    </string-array>
+
+</resources>

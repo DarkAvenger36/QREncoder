@@ -1,0 +1,62 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:orientation="vertical" >
+
+
+<EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textArea"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:inputType="text"
+        android:text="" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal">
+
+        <Spinner
+            android:id="@+id/eccList"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="0dp"
+            android:layout_weight="0.3"
+            android:layout_height="wrap_content"></Spinner>
+
+        <Spinner
+            android:id="@+id/modeList"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="0dp"
+            android:layout_weight="0.65"
+            android:layout_height="wrap_content"></Spinner>
+
+        <Button
+            android:id="@+id/generateQR"
+            android:layout_width="0dp"
+            android:layout_weight="0.85"
+            android:layout_height="wrap_content"
+            android:text="@string/generate"/>
+
+
+        </LinearLayout>
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="250dp"
+        android:id="@+id/imageViewer"
+        android:layout_gravity="center_vertical" />
+    <TextView
+        android:id="@+id/encodedText"
+        android:scrollbars="vertical"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
