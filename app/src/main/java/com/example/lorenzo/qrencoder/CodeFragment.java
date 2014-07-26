@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.Editable;
@@ -179,7 +180,7 @@ public class CodeFragment extends Fragment {
     }
 
 
-    private void generateHCC(String msg,String ecc){
+    private Bitmap generateHCC(String msg,String ecc){
         HCCQRcodeWriter writer = new HCCQRcodeWriter();
 
         try {
@@ -188,14 +189,16 @@ public class CodeFragment extends Fragment {
             hintMap.put(EncodeHintType.ERROR_CORRECTION,ErrorCorrectionLevel.valueOf(ecc));
             BitVectorMatrix matrix = writer.encode(msg, BarcodeFormat.QR_CODE,min,min,hintMap);
             bmp = toBitmap(matrix);
-            imgView.setImageBitmap(bmp);
-            encodedTxt.setText(msg);
+            //imgView.setImageBitmap(bmp);
+
+            return bmp;
         }catch (WriterException we){
             we.printStackTrace();
         }
+        return null;
     }
 
-    private void generateAll(String msg,String ecc,String mode){
+    private Bitmap generateAll(String msg,String ecc,String mode){
         QRCodeWriter writer = new QRCodeWriter();
 
         try {
@@ -204,28 +207,25 @@ public class CodeFragment extends Fragment {
             hintMap.put(EncodeHintType.ERROR_CORRECTION, main.java.com.google.zxing.qrcode.decoder.ErrorCorrectionLevel.valueOf(ecc));
             BitMatrix matrix = writer.encode(msg, BarcodeFormat.valueOf(mode.toUpperCase()),min,min,hintMap);
             bmp = toBitmapBW(matrix);
-            imgView.setImageBitmap(bmp);
-            encodedTxt.setText(msg);
+            //imgView.setImageBitmap(bmp);
+            //encodedTxt.setText(msg);
+            return bmp;
 
         }catch (WriterException we){
             we.printStackTrace();
         }
+        return null;
     }
 
     public void generateQR(){
 
-
         String message = textArea.getText().toString();
         if (!message.isEmpty()){
             Log.d(LOG_TAG, "User input = " + message);
-            String ecc = eccSpinner.getSelectedItem().toString();
+            ecc = eccSpinner.getSelectedItem().toString();
             String mode = modeSpinner.getSelectedItem().toString();
-
-            if(mode.equals("HCC-QR")){
-                generateHCC(message,ecc);
-            }else{
-                generateAll(message,ecc,mode);
-            }
+            new GenerateQRClass().execute(message, mode);
+            encodedTxt.setText(message);
         }else{
             Toast.makeText(getActivity(),R.string.empty_string,Toast.LENGTH_SHORT).show();
             clearPage();
@@ -303,6 +303,26 @@ public class CodeFragment extends Fragment {
         }
     }
 
+    private class GenerateQRClass extends AsyncTask<String,Void,Bitmap>{
 
+        @Override
+        protected Bitmap doInBackground(String... a) {
+            String message = a[0];
+            String mode = a[1];
+
+
+            if(mode.equals("HCC-QR")){
+                return generateHCC(message,ecc);
+            }else{
+                return generateAll(message,ecc,mode);
+            }
+        }
+
+        protected void onPostExecute(Bitmap bmp){
+            if (bmp != null) {
+                imgView.setImageBitmap(bmp);
+            }
+        }
+    }
 
 }

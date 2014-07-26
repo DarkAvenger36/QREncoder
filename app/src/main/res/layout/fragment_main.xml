@@ -32,7 +32,7 @@
             android:id="@+id/modeList"
             android:layout_gravity="center_horizontal"
             android:layout_width="0dp"
-            android:layout_weight="0.65"
+            android:layout_weight="0.75"
             android:layout_height="wrap_content"></Spinner>
 
         <Button
@@ -53,10 +53,17 @@
         android:id="@+id/imageViewer"
         android:layout_gravity="center_vertical" />
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/encode_label"
+        android:textStyle="bold"
+        android:textIsSelectable="false"
+        android:textSize="18dp" />
+    <TextView
         android:id="@+id/encodedText"
         android:scrollbars="vertical"
-
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textStyle="italic" />
 
 </LinearLayout>
