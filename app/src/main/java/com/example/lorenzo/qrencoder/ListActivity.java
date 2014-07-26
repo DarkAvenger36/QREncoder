@@ -10,10 +10,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class ListActivity extends Activity {
 
     private final String LOG_TAG = ListActivity.class.getSimpleName();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +59,7 @@ public class ListActivity extends Activity {
     public static class ListFragment extends Fragment {
 
         private final String LOG_TAG = ListFragment.class.getSimpleName();
+        private ArrayAdapter<String> mListAdapter;
 
         public ListFragment() {
         }
@@ -78,6 +86,30 @@ public class ListActivity extends Activity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_list, container, false);
+
+            String[] sampleDataArray = {
+                    "asd",
+                    "fdsafa",
+                    "bgfdfgds",
+                    "hhgfdfg",
+                    "gfe",
+                    "sdfgd",
+                    "hgfdhgfd"};
+
+            List<String> sampleData = new ArrayList<String>(
+                    Arrays.asList(sampleDataArray)
+                    );
+
+            mListAdapter = new ArrayAdapter<String>(
+                    getActivity(),
+                    R.layout.list_item_encoded_strings,
+                    R.id.list_item_encoded_strings_textview,
+                    sampleData
+            );
+
+            ListView listView = (ListView) rootView.findViewById(R.id.list_encoded_strings);
+            listView.setAdapter(mListAdapter);
+
             return rootView;
         }
     }
