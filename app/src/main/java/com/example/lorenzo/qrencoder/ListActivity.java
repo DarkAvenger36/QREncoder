@@ -1,19 +1,19 @@
 package com.example.lorenzo.qrencoder;
 
 import android.app.Activity;
-import android.app.ActionBar;
 import android.app.Fragment;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.os.Build;
-
-import com.example.lorenzo.qrencoder.R;
 
 public class ListActivity extends Activity {
+
+    private final String LOG_TAG = ListActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +21,7 @@ public class ListActivity extends Activity {
         setContentView(R.layout.activity_list);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
+                    .add(R.id.container, new ListFragment())
                     .commit();
         }
     }
@@ -49,9 +49,29 @@ public class ListActivity extends Activity {
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class ListFragment extends Fragment {
 
-        public PlaceholderFragment() {
+        private final String LOG_TAG = ListFragment.class.getSimpleName();
+
+        public ListFragment() {
+        }
+
+        public void onCreate(Bundle savedInstance){
+            setHasOptionsMenu(true);
+            super.onCreate(savedInstance);
+        }
+
+        public boolean onOptionsItemSelected(MenuItem item){
+            int id = item.getItemId();
+            //Log.d(LOG_TAG,"Voglio confrontare: "+id);
+            if (id == R.id.add_qr){
+                Log.d(LOG_TAG,"add qr pressed from menu");
+                Intent openGenerateQRIntent = new Intent(getActivity(), MainActivity.class);
+                startActivity(openGenerateQRIntent);
+                return true;
+            }
+
+            return super.onOptionsItemSelected(item);
         }
 
         @Override
