@@ -39,5 +39,8 @@
 
     <string name="title_activity_list">ListActivity</string>
     <string name="add_qr">Add</string>
+    <string name="title_activity_detail">DetailActivity</string>
+
+    <string name="action_share">Share</string>
 
 </resources>

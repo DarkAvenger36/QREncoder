@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -109,6 +110,17 @@ public class ListActivity extends Activity {
 
             ListView listView = (ListView) rootView.findViewById(R.id.list_encoded_strings);
             listView.setAdapter(mListAdapter);
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+                @Override
+                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    String selectedItem = mListAdapter.getItem(i).toString();
+                    Intent openDetailIntent = new Intent(getActivity(), DetailActivity.class)
+                            .putExtra(Intent.EXTRA_TEXT, selectedItem);
+                    startActivity(openDetailIntent);
+                }
+
+            });
 
             return rootView;
         }
