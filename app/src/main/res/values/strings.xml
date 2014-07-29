@@ -42,5 +42,6 @@
     <string name="title_activity_detail">DetailActivity</string>
 
     <string name="action_share">Share</string>
+    <string name="decoded_label">Decoded text: </string>
 
 </resources>

@@ -3,7 +3,10 @@ package com.example.lorenzo.qrencoder;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.ImageView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
 
@@ -59,6 +63,8 @@ public class DetailActivity extends Activity {
 
         private static final String LOG_TAG = DetailFragment.class.getSimpleName();
 
+        private static final String FILE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() +"/QRCODE/";
+
         public DetailFragment() {
             setHasOptionsMenu(true);
         }
@@ -78,9 +84,17 @@ public class DetailActivity extends Activity {
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
             Intent intent = getActivity().getIntent();
             TextView textView = (TextView) rootView.findViewById(R.id.text_label);
+            ImageView image = (ImageView) rootView.findViewById(R.id.show_image);
             if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)){
                 String ricevuto = intent.getStringExtra(Intent.EXTRA_TEXT);
                 textView.setText(ricevuto);
+
+                try {
+                    Bitmap bmp = BitmapFactory.decodeFile(FILE_PATH + ricevuto);
+                    image.setImageBitmap(bmp);
+                }catch (Exception e){
+                    Log.e(LOG_TAG, "ERROR: unable to decode image. Image exist?");
+                }
             }
             return rootView;
         }

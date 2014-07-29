@@ -89,10 +89,10 @@ public class ListActivity extends Activity {
             View rootView = inflater.inflate(R.layout.fragment_list, container, false);
 
             String[] sampleDataArray = {
-                    "asd",
+                    "encodedString.png",
                     "fdsafa",
-                    "bgfdfgds",
-                    "hhgfdfg",
+                    "g.png",
+                    "QR.png",
                     "gfe",
                     "sdfgd",
                     "hgfdhgfd"};
