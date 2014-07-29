@@ -14,12 +14,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.ImageView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
-
-import com.example.lorenzo.qrencoder.R;
 
 public class DetailActivity extends Activity {
 
@@ -88,9 +85,9 @@ public class DetailActivity extends Activity {
             if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)){
                 String ricevuto = intent.getStringExtra(Intent.EXTRA_TEXT);
                 textView.setText(ricevuto);
-
+                String completeFileName = ricevuto + CodeFragment.FORMAT;
                 try {
-                    Bitmap bmp = BitmapFactory.decodeFile(FILE_PATH + ricevuto);
+                    Bitmap bmp = BitmapFactory.decodeFile(FILE_PATH + completeFileName);
                     image.setImageBitmap(bmp);
                 }catch (Exception e){
                     Log.e(LOG_TAG, "ERROR: unable to decode image. Image exist?");

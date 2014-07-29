@@ -3,6 +3,8 @@ package com.example.lorenzo.qrencoder;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +15,10 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
+
+import com.example.lorenzo.qrencoder.data.EncodedContract.StringEntry;
+import com.example.lorenzo.qrencoder.data.EncodedDbHelper;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -61,12 +67,15 @@ public class ListActivity extends Activity {
 
         private final String LOG_TAG = ListFragment.class.getSimpleName();
         private ArrayAdapter<String> mListAdapter;
+        private EncodedDbHelper encodedDbHelper;
+
 
         public ListFragment() {
         }
 
         public void onCreate(Bundle savedInstance){
             setHasOptionsMenu(true);
+            encodedDbHelper = new EncodedDbHelper(getActivity());
             super.onCreate(savedInstance);
         }
 
@@ -89,17 +98,57 @@ public class ListActivity extends Activity {
             View rootView = inflater.inflate(R.layout.fragment_list, container, false);
 
             String[] sampleDataArray = {
-                    "encodedString.png",
-                    "fdsafa",
-                    "g.png",
-                    "QR.png",
-                    "gfe",
-                    "sdfgd",
-                    "hgfdhgfd"};
+                    "encodedString",
+                    "g",
+                    "QR"
+            };
 
             List<String> sampleData = new ArrayList<String>(
                     Arrays.asList(sampleDataArray)
-                    );
+            );
+
+            String[] projection = {
+                    StringEntry._ID,
+                    StringEntry.COLUMN_FILE_NAME,
+                    StringEntry.COLUMN_ENCODED_STRING
+            };
+
+            SQLiteDatabase db = encodedDbHelper.getReadableDatabase();
+
+            Cursor cursor = db.query(
+                    StringEntry.TABLE_NAME,
+                    projection,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+            );
+
+            int[] to = new int[]{
+                    R.id._id,
+                    R.id.list_item_file_name,
+                    R.id.list_item_encoded_strings_textview
+            };
+
+
+            /*cursor.moveToFirst();
+
+            while(!cursor.isLast()){
+                sampleData.add(cursor.getString(0));
+                Log.d(LOG_TAG, "STO ITERANDO SULL'ELEMENTO: "+ cursor.getString(0) +" messaggio = "+cursor.getString(1) );
+                cursor.moveToNext();
+            }*/
+
+
+            SimpleCursorAdapter adapter1 = new SimpleCursorAdapter(
+                    getActivity(),
+                    R.layout.list_item_encoded_strings,
+                    cursor,
+                    projection,
+                    to,
+                    0
+            );
 
             mListAdapter = new ArrayAdapter<String>(
                     getActivity(),
@@ -109,9 +158,9 @@ public class ListActivity extends Activity {
             );
 
             ListView listView = (ListView) rootView.findViewById(R.id.list_encoded_strings);
-            listView.setAdapter(mListAdapter);
+            listView.setAdapter(adapter1);
 
-            listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     String selectedItem = mListAdapter.getItem(i).toString();
@@ -125,4 +174,5 @@ public class ListActivity extends Activity {
             return rootView;
         }
     }
+
 }

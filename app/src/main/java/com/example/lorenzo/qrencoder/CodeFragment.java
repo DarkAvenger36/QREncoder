@@ -2,13 +2,14 @@ package com.example.lorenzo.qrencoder;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.text.Editable;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -16,7 +17,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -24,6 +24,9 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.lorenzo.qrencoder.data.EncodedContract;
+import com.example.lorenzo.qrencoder.data.EncodedDbHelper;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -45,7 +48,7 @@ import main.java.com.google.zxing.qrcode.QRCodeWriter;
 public class CodeFragment extends Fragment {
 
     private final String LOG_TAG = CodeFragment.class.getSimpleName();
-    private final String FORMAT = ".png";
+    public static final String FORMAT = ".png";
 
     private View rootView;
     private ImageView imgView;
@@ -57,6 +60,9 @@ public class CodeFragment extends Fragment {
     private String ecc = "L";
     private int width, height;
     private Bitmap bmp;
+    private String message = null;
+
+    private EncodedDbHelper encodedDbHelper;
 
     public CodeFragment() {
     }
@@ -66,6 +72,9 @@ public class CodeFragment extends Fragment {
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
         width=dm.widthPixels;
         height=dm.heightPixels;
+
+        encodedDbHelper = new EncodedDbHelper(getActivity());
+
         super.onCreate(savedIstanceState);
         setHasOptionsMenu(true);
 
@@ -219,7 +228,7 @@ public class CodeFragment extends Fragment {
 
     public void generateQR(){
 
-        String message = textArea.getText().toString();
+        message = textArea.getText().toString();
         if (!message.isEmpty()){
             Log.d(LOG_TAG, "User input = " + message);
             ecc = eccSpinner.getSelectedItem().toString();
@@ -256,7 +265,22 @@ public class CodeFragment extends Fragment {
         } else {
 
             String selectedName = fileName + this.FORMAT;
-            //Log.d(LOG_TAG,"selecte name = "+ selectedName);
+
+            SQLiteDatabase db = encodedDbHelper.getWritableDatabase();
+
+            ContentValues values = new ContentValues();
+            values.put(EncodedContract.StringEntry.COLUMN_FILE_NAME, fileName);
+            values.put(EncodedContract.StringEntry.COLUMN_ENCODED_STRING, message);
+
+            long newRowId;
+
+            newRowId = db.insert(
+                    EncodedContract.StringEntry.TABLE_NAME,
+                    null,
+                    values);
+
+
+            Log.d(LOG_TAG,"element insert in database with id = " + newRowId);
             File file = new File(dir, selectedName);
             FileOutputStream fOut = null;
             try {

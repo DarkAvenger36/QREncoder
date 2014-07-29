@@ -19,9 +19,10 @@ public class EncodedDbHelper extends SQLiteOpenHelper {
 
     public void onCreate(SQLiteDatabase sqLiteDatabase){
         final String SQL_CREATE_ENCODED_TEXT_TABLE = "CREATE TABLE " + StringEntry.TABLE_NAME + " (" +
-                StringEntry.COLUMN_FILE_NAME + " TEXT PRIMARY KEY, " +
-                StringEntry.COLUMN_ENCODED_STRING + " TEXT NOT NULL" +
-                ");";
+                StringEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                StringEntry.COLUMN_FILE_NAME + " TEXT NOT NULL, " +
+                StringEntry.COLUMN_ENCODED_STRING + " TEXT NOT NULL, " +
+                " UNIQUE (" + StringEntry.COLUMN_FILE_NAME + ") ON CONFLICT REPLACE);";
 
         sqLiteDatabase.execSQL(SQL_CREATE_ENCODED_TEXT_TABLE);
     }
