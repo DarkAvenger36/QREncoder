@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -62,6 +63,8 @@ public class DetailActivity extends Activity {
 
         private static final String FILE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() +"/QRCODE/";
 
+        private String completeFileName;
+
         public DetailFragment() {
             setHasOptionsMenu(true);
         }
@@ -69,8 +72,10 @@ public class DetailActivity extends Activity {
         private Intent createShareSocialIntent(){
             Intent shareIntent = new Intent(Intent.ACTION_SEND);
             shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
-            shareIntent.setType("text/plain"); //dovrà diventare "image/jpeg"
-            shareIntent.putExtra(Intent.EXTRA_TEXT, "Sto condividendo dall'app!!");
+            shareIntent.setType("image/jpeg");
+             //shareIntent.setType("text/plain");//dovrà diventare "image/jpeg"
+            //shareIntent.putExtra(Intent.EXTRA_TEXT, "Sto condividendo dall'app!!");
+            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse("file:///" + FILE_PATH + completeFileName));
             //dovrà diventare putExtra((Intent.EXTRA_STREAM, Uri.parse("file:///...."));
             return shareIntent;
         }
@@ -82,10 +87,14 @@ public class DetailActivity extends Activity {
             Intent intent = getActivity().getIntent();
             TextView textView = (TextView) rootView.findViewById(R.id.text_label);
             ImageView image = (ImageView) rootView.findViewById(R.id.show_image);
-            if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)){
-                String ricevuto = intent.getStringExtra(Intent.EXTRA_TEXT);
-                textView.setText(ricevuto);
-                String completeFileName = ricevuto + CodeFragment.FORMAT;
+
+            if (intent != null && intent.getExtras() != null){
+                Bundle extras = intent.getExtras();
+                String selectedItem = extras.getString("SELECTED_ITEM");
+                String encodedText = extras.getString("ENCODED_TEXT");
+                Log.d(LOG_TAG, "ricevuto = " + selectedItem + " prova = " + encodedText);
+                textView.setText(encodedText);
+                completeFileName = selectedItem + CodeFragment.FORMAT;
                 try {
                     Bitmap bmp = BitmapFactory.decodeFile(FILE_PATH + completeFileName);
                     image.setImageBitmap(bmp);

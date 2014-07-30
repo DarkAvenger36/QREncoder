@@ -1,5 +1,10 @@
+
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.lorenzo.qrencoder.DetailActivity" >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/action_share"
+        android:title="@string/action_share"
+        android:showAsAction="always"
+        android:icon="@drawable/ic_action_share"
+        android:actionProviderClass="android.widget.ShareActionProvider"/>
 
 </menu>

@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.TextView;
 
 import com.example.lorenzo.qrencoder.data.EncodedContract.StringEntry;
 import com.example.lorenzo.qrencoder.data.EncodedDbHelper;
@@ -71,6 +72,7 @@ public class ListActivity extends Activity {
 
 
         public ListFragment() {
+            setHasOptionsMenu(true);
         }
 
         public void onCreate(Bundle savedInstance){
@@ -100,7 +102,8 @@ public class ListActivity extends Activity {
             String[] sampleDataArray = {
                     "encodedString",
                     "g",
-                    "QR"
+                    "QR",
+                    "Tracchete"
             };
 
             List<String> sampleData = new ArrayList<String>(
@@ -141,7 +144,7 @@ public class ListActivity extends Activity {
             }*/
 
 
-            SimpleCursorAdapter adapter1 = new SimpleCursorAdapter(
+            final SimpleCursorAdapter adapter1 = new SimpleCursorAdapter(
                     getActivity(),
                     R.layout.list_item_encoded_strings,
                     cursor,
@@ -163,9 +166,16 @@ public class ListActivity extends Activity {
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    String selectedItem = mListAdapter.getItem(i).toString();
+                    //String selectedItem = mListAdapter.getItem(i);
+                    String selectedItem =( (TextView) adapterView.findViewById(R.id.list_item_file_name)).getText().toString();
+                    String encodedText = ( (TextView) adapterView.findViewById(R.id.list_item_encoded_strings_textview)).getText().toString();
+                    Log.d(LOG_TAG, "ITEM i = " + selectedItem);
+                    TextView a = (TextView) adapterView.findViewById(R.id.list_item_file_name);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("SELECTED_ITEM", selectedItem);
+                    bundle.putString("ENCODED_TEXT", encodedText);
                     Intent openDetailIntent = new Intent(getActivity(), DetailActivity.class)
-                            .putExtra(Intent.EXTRA_TEXT, selectedItem);
+                            .putExtras(bundle);
                     startActivity(openDetailIntent);
                 }
 
