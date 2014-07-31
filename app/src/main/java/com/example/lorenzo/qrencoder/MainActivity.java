@@ -6,6 +6,7 @@ import android.app.Fragment;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -22,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -80,5 +82,7 @@ public class MainActivity extends Activity {
     /**
      * A placeholder fragment containing a simple view.
      */
+
+
 
 }

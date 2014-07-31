@@ -49,6 +49,7 @@ public class CodeFragment extends Fragment {
 
     private final String LOG_TAG = CodeFragment.class.getSimpleName();
     public static final String FORMAT = ".png";
+    public final String FILE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/QRCODE";
 
     private View rootView;
     private ImageView imgView;
@@ -138,13 +139,10 @@ public class CodeFragment extends Fragment {
             }
         });
 
-        String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                "/QRCODE";
-        dir = new File(file_path);
+
+        dir = new File(FILE_PATH);
         if (!dir.exists())
             dir.mkdirs();
-
-        dir.setReadOnly();
 
         return rootView;
     }

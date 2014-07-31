@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.lorenzo.qrencoder.data.EncodedContract.StringEntry;
 import com.example.lorenzo.qrencoder.data.EncodedDbHelper;
@@ -28,6 +30,8 @@ import java.util.List;
 public class ListActivity extends Activity {
 
     private final String LOG_TAG = ListActivity.class.getSimpleName();
+
+    private boolean doubleBackToExitPressedOnce;
 
 
     @Override
@@ -191,6 +195,25 @@ public class ListActivity extends Activity {
         }
     }
 
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                doubleBackToExitPressedOnce=false;
+            }
+        }, 2000);
+    }
 
 
 
