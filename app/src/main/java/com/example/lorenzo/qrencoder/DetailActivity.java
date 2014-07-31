@@ -3,6 +3,7 @@ package com.example.lorenzo.qrencoder;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -18,6 +19,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.lorenzo.qrencoder.data.EncodedContract;
+import com.example.lorenzo.qrencoder.data.EncodedDbHelper;
+
+import java.io.File;
 
 public class DetailActivity extends Activity {
 
@@ -48,10 +55,23 @@ public class DetailActivity extends Activity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_delete) {
+            delete();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void delete(){
+        String selection = EncodedContract.StringEntry.COLUMN_FILE_NAME + "=?";
+        //Log.d(LOG_TAG, "filename = " + DetailFragment.fileName);
+        String[] selectionArgs = {DetailFragment.fileName};
+        EncodedDbHelper encodedDbHelper = new EncodedDbHelper(this);
+        SQLiteDatabase db = encodedDbHelper.getWritableDatabase();
+        db.delete(EncodedContract.StringEntry.TABLE_NAME,selection,selectionArgs);
+        DetailFragment.deleteFile();
+        Toast.makeText(this,R.string.toast_deleted,Toast.LENGTH_SHORT).show();
+        super.onBackPressed();
     }
 
     /**
@@ -64,6 +84,8 @@ public class DetailActivity extends Activity {
         private static final String FILE_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() +"/QRCODE/";
 
         private String completeFileName;
+
+        public static String fileName;
 
         public DetailFragment() {
             setHasOptionsMenu(true);
@@ -80,6 +102,10 @@ public class DetailActivity extends Activity {
             return shareIntent;
         }
 
+        public static void deleteFile(){
+            File file = new File(FILE_PATH + fileName + CodeFragment.FORMAT);
+            file.delete();
+        }
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                 Bundle savedInstanceState) {
@@ -91,6 +117,7 @@ public class DetailActivity extends Activity {
             if (intent != null && intent.getExtras() != null){
                 Bundle extras = intent.getExtras();
                 String selectedItem = extras.getString("SELECTED_ITEM");
+                fileName = selectedItem;
                 String encodedText = extras.getString("ENCODED_TEXT");
                 Log.d(LOG_TAG, "ricevuto = " + selectedItem + " prova = " + encodedText);
                 textView.setText(encodedText);

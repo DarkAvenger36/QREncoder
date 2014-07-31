@@ -69,46 +69,9 @@ public class ListActivity extends Activity {
         private final String LOG_TAG = ListFragment.class.getSimpleName();
         private ArrayAdapter<String> mListAdapter;
         private EncodedDbHelper encodedDbHelper;
+        private  ListView listView;
 
-
-        public ListFragment() {
-            setHasOptionsMenu(true);
-        }
-
-        public void onCreate(Bundle savedInstance){
-            setHasOptionsMenu(true);
-            encodedDbHelper = new EncodedDbHelper(getActivity());
-            super.onCreate(savedInstance);
-        }
-
-        public boolean onOptionsItemSelected(MenuItem item){
-            int id = item.getItemId();
-            //Log.d(LOG_TAG,"Voglio confrontare: "+id);
-            if (id == R.id.add_qr){
-                Log.d(LOG_TAG,"add qr pressed from menu");
-                Intent openGenerateQRIntent = new Intent(getActivity(), MainActivity.class);
-                startActivity(openGenerateQRIntent);
-                return true;
-            }
-
-            return super.onOptionsItemSelected(item);
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_list, container, false);
-
-            String[] sampleDataArray = {
-                    "encodedString",
-                    "g",
-                    "QR",
-                    "Tracchete"
-            };
-
-            List<String> sampleData = new ArrayList<String>(
-                    Arrays.asList(sampleDataArray)
-            );
+        private SimpleCursorAdapter updateList(){
 
             String[] projection = {
                     StringEntry._ID,
@@ -152,23 +115,59 @@ public class ListActivity extends Activity {
                     to,
                     0
             );
+            return adapter1;
+        }
 
-            mListAdapter = new ArrayAdapter<String>(
-                    getActivity(),
-                    R.layout.list_item_encoded_strings,
-                    R.id.list_item_encoded_strings_textview,
-                    sampleData
+
+        public ListFragment() {
+            setHasOptionsMenu(true);
+        }
+
+        public void onCreate(Bundle savedInstance){
+            setHasOptionsMenu(true);
+            encodedDbHelper = new EncodedDbHelper(getActivity());
+            super.onCreate(savedInstance);
+        }
+
+        public boolean onOptionsItemSelected(MenuItem item){
+            int id = item.getItemId();
+            //Log.d(LOG_TAG,"Voglio confrontare: "+id);
+            if (id == R.id.add_qr){
+                Log.d(LOG_TAG,"add qr pressed from menu");
+                Intent openGenerateQRIntent = new Intent(getActivity(), MainActivity.class);
+                startActivity(openGenerateQRIntent);
+                return true;
+            }
+
+            return super.onOptionsItemSelected(item);
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                Bundle savedInstanceState) {
+            View rootView = inflater.inflate(R.layout.fragment_list, container, false);
+
+            String[] sampleDataArray = {
+                    "encodedString",
+                    "g",
+                    "QR",
+                    "Tracchete"
+            };
+
+            List<String> sampleData = new ArrayList<String>(
+                    Arrays.asList(sampleDataArray)
             );
 
-            ListView listView = (ListView) rootView.findViewById(R.id.list_encoded_strings);
-            listView.setAdapter(adapter1);
+
+            listView = (ListView) rootView.findViewById(R.id.list_encoded_strings);
+            listView.setAdapter(updateList());
 
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     //String selectedItem = mListAdapter.getItem(i);
-                    String selectedItem =( (TextView) adapterView.findViewById(R.id.list_item_file_name)).getText().toString();
-                    String encodedText = ( (TextView) adapterView.findViewById(R.id.list_item_encoded_strings_textview)).getText().toString();
+                    String selectedItem =( (TextView) view.findViewById(R.id.list_item_file_name)).getText().toString();
+                    String encodedText = ( (TextView) view.findViewById(R.id.list_item_encoded_strings_textview)).getText().toString();
                     Log.d(LOG_TAG, "ITEM i = " + selectedItem);
                     TextView a = (TextView) adapterView.findViewById(R.id.list_item_file_name);
                     Bundle bundle = new Bundle();
@@ -183,6 +182,17 @@ public class ListActivity extends Activity {
 
             return rootView;
         }
+
+
+        public void onResume(){
+            super.onResume();
+            Log.d(LOG_TAG, "SONO ON RESUME");
+            listView.setAdapter(updateList());
+        }
     }
+
+
+
+
 
 }

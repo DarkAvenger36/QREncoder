@@ -61,6 +61,7 @@ public class CodeFragment extends Fragment {
     private int width, height;
     private Bitmap bmp;
     private String message = null;
+    private File dir;
 
     private EncodedDbHelper encodedDbHelper;
 
@@ -136,6 +137,14 @@ public class CodeFragment extends Fragment {
                 generateQR();
             }
         });
+
+        String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                "/QRCODE";
+        dir = new File(file_path);
+        if (!dir.exists())
+            dir.mkdirs();
+
+        dir.setReadOnly();
 
         return rootView;
     }
@@ -250,12 +259,6 @@ public class CodeFragment extends Fragment {
     }
 
     private void saveImage(String fileName){
-        String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
-                "/QRCODE";
-        File dir = new File(file_path);
-        if (!dir.exists())
-            dir.mkdirs();
-
 
         if (fileName.isEmpty()) {
             //do not save
@@ -280,7 +283,7 @@ public class CodeFragment extends Fragment {
                     values);
 
 
-            Log.d(LOG_TAG,"element insert in database with id = " + newRowId);
+            //Log.d(LOG_TAG,"element insert in database with id = " + newRowId);
             File file = new File(dir, selectedName);
             FileOutputStream fOut = null;
             try {
@@ -346,6 +349,15 @@ public class CodeFragment extends Fragment {
             if (bmp != null) {
                 imgView.setImageBitmap(bmp);
             }
+        }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        if (bmp != null) {
+            imgView.setImageBitmap(bmp);
+            encodedTxt.setText(message);
         }
     }
 
