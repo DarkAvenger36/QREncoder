@@ -172,7 +172,7 @@ public class ListActivity extends Activity {
                     //String selectedItem = mListAdapter.getItem(i);
                     String selectedItem =( (TextView) view.findViewById(R.id.list_item_file_name)).getText().toString();
                     String encodedText = ( (TextView) view.findViewById(R.id.list_item_encoded_strings_textview)).getText().toString();
-                    Log.d(LOG_TAG, "ITEM i = " + selectedItem);
+                    //Log.d(LOG_TAG, "ITEM i = " + selectedItem);
                     TextView a = (TextView) adapterView.findViewById(R.id.list_item_file_name);
                     Bundle bundle = new Bundle();
                     bundle.putString("SELECTED_ITEM", selectedItem);
@@ -190,7 +190,7 @@ public class ListActivity extends Activity {
 
         public void onResume(){
             super.onResume();
-            Log.d(LOG_TAG, "SONO ON RESUME");
+            //Log.d(LOG_TAG, "SONO ON RESUME");
             listView.setAdapter(updateList());
         }
     }
@@ -204,7 +204,7 @@ public class ListActivity extends Activity {
         }
 
         this.doubleBackToExitPressedOnce = true;
-        Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.toast_exit, Toast.LENGTH_SHORT).show();
 
         new Handler().postDelayed(new Runnable() {
 

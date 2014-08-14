@@ -36,4 +36,5 @@
     <string name="decoded_label">Decoded text: </string>
     <string name="action_delete">Delete</string>
     <string name="toast_deleted">QR deleted!</string>
+    <string name="toast_exit">Please click BACK again to exit</string>
 </resources>
