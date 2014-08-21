@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TimingLogger;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -113,6 +114,12 @@ public class CodeFragment extends Fragment {
 
         encodedTxt.setMovementMethod(new ScrollingMovementMethod());
 
+        //------------------
+        String tmp = rndString(2605);
+        Log.d(LOG_TAG, "Stringa generata = " + tmp);
+        textArea.setText(tmp);
+        //------------------
+
         if(height<width){
             min=height;
         }else{
@@ -197,6 +204,8 @@ public class CodeFragment extends Fragment {
 
 
     private Bitmap generateHCC(String msg,String ecc){
+        TimingLogger logger = new TimingLogger("topicLogTag","encoder");
+        logger.addSplit("inizio");
         HCCQRcodeWriter writer = new HCCQRcodeWriter();
 
         try {
@@ -204,7 +213,11 @@ public class CodeFragment extends Fragment {
             Hashtable<EncodeHintType, ErrorCorrectionLevel> hintMap = new Hashtable<EncodeHintType, ErrorCorrectionLevel>();
             hintMap.put(EncodeHintType.ERROR_CORRECTION,ErrorCorrectionLevel.valueOf(ecc));
             BitVectorMatrix matrix = writer.encode(msg, BarcodeFormat.QR_CODE,min,min,hintMap);
+            logger.addSplit("fine");
+            logger.dumpToLog();
             bmp = toBitmap(matrix);
+            logger.addSplit("dopo bmp");
+            logger.dumpToLog();
             //imgView.setImageBitmap(bmp);
 
             return bmp;
@@ -357,6 +370,23 @@ public class CodeFragment extends Fragment {
             imgView.setImageBitmap(bmp);
             encodedTxt.setText(message);
         }
+    }
+
+    private String rndString (int n) {
+        char[] msg= new char[n];
+        int rnd =0;
+
+        for(int i = 0; i< n; i++) {
+            rnd = (int) (Math.random() * 52); // or use Random or whatever
+            char base = (rnd < 26) ? 'A' : 'a';
+            msg[i] = (char) (base + rnd % 26);
+        }
+        String a="";
+        for(int i=0; i<n; i++){
+            a+=msg[i];
+        }
+        return a;
+
     }
 
 }
