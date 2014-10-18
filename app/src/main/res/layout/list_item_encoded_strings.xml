@@ -21,7 +21,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:maxLines="1"
-        android:maxLength="5"
        />
     <TextView
         android:text="Encoded: "
@@ -34,8 +33,6 @@
         android:id="@+id/list_item_encoded_strings_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
-        android:maxLength="10"
         android:ellipsize="end"/>
 
 

@@ -117,7 +117,7 @@ public class CodeFragment extends Fragment {
         //------------------
         String tmp = rndString(2605);
         Log.d(LOG_TAG, "Stringa generata = " + tmp);
-        textArea.setText(tmp);
+        //textArea.setText(tmp);
         //------------------
 
         if(height<width){
